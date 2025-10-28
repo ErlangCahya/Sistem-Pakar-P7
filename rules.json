@@ -1,0 +1,61 @@
+{
+  "symptoms": {
+    "G01": {"label": "Usia > 40 tahun", "MB": 0.7, "MD": 0.2},
+    "G02": {"label": "Kelebihan berat badan", "MB": 0.6, "MD": 0.3},
+    "G03": {"label": "Riwayat patah tulang", "MB": 0.6, "MD": 0.1},
+    "G04": {"label": "Riwayat keluarga osteoporosis", "MB": 1.0, "MD": 0.1},
+    "G05": {"label": "Mengalami menopause", "MB": 0.6, "MD": 0.3},
+    "G06": {"label": "Sakit punggung berkelanjutan", "MB": 0.7, "MD": 0.2},
+    "G07": {"label": "Sering merokok", "MB": 0.8, "MD": 0.1},
+    "G08": {"label": "Nyeri pada sendi", "MB": 0.6, "MD": 0.2},
+    "G09": {"label": "Kekurangan hormon testosteron", "MB": 0.7, "MD": 0.2},
+    "G10": {"label": "Sering konsumsi minuman keras", "MB": 0.8, "MD": 0.1},
+    "G11": {"label": "Keretakan pada tulang punggung", "MB": 0.6, "MD": 0.2},
+    "G12": {"label": "Konsumsi obat steroid (glukokortikoid)", "MB": 0.7, "MD": 0.1},
+    "G13": {"label": "Mengidap hipertiroidisme", "MB": 0.6, "MD": 0.2}
+  },
+  "rules": [
+    {
+      "id": "R1",
+      "if": ["G01","G02","G03","G05","G08","G11","G13"],
+      "then": "P01",
+      "then_label": "Bukan Osteoporosis",
+      "cf": 0.95
+    },
+    {
+      "id": "R2",
+      "if": ["G01","G02","G03","G07","G10","G12","G13"],
+      "then": "P02",
+      "then_label": "Osteoporosis Primer",
+      "cf": 0.9
+    },
+    {
+      "id": "R3",
+      "if": ["G04","G05","G06","G08","G09","G11"],
+      "then": "P03",
+      "then_label": "Osteoporosis Sekunder",
+      "cf": 0.9
+    },
+    {
+      "id": "R4",
+      "if": ["P02"],
+      "then": "Complication_A",
+      "then_label": "Komplikasi: Fraktur Tinggi",
+      "cf": 0.8
+    },
+    {
+      "id": "R5",
+      "if": ["G05","G11"],
+      "then": "P02",
+      "then_label": "Osteoporosis Primer (aturan paralel, cf rendah)",
+      "cf": 0.5
+    },
+    {
+      "id": "R6",
+      "if": ["G01","G05","G11"],
+      "then": "P02",
+      "then_label": "Osteoporosis Primer (aturan paralel, cf sedang)",
+      "cf": 0.75
+    }
+  ]
+}
