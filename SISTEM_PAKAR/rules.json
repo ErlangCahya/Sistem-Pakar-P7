@@ -1,61 +1,95 @@
 {
-  "symptoms": {
-    "G01": {"label": "Usia > 40 tahun", "MB": 0.7, "MD": 0.2},
-    "G02": {"label": "Kelebihan berat badan", "MB": 0.6, "MD": 0.3},
-    "G03": {"label": "Riwayat patah tulang", "MB": 0.6, "MD": 0.1},
-    "G04": {"label": "Riwayat keluarga osteoporosis", "MB": 1.0, "MD": 0.1},
-    "G05": {"label": "Mengalami menopause", "MB": 0.6, "MD": 0.3},
-    "G06": {"label": "Sakit punggung berkelanjutan", "MB": 0.7, "MD": 0.2},
-    "G07": {"label": "Sering merokok", "MB": 0.8, "MD": 0.1},
-    "G08": {"label": "Nyeri pada sendi", "MB": 0.6, "MD": 0.2},
-    "G09": {"label": "Kekurangan hormon testosteron", "MB": 0.7, "MD": 0.2},
-    "G10": {"label": "Sering konsumsi minuman keras", "MB": 0.8, "MD": 0.1},
-    "G11": {"label": "Keretakan pada tulang punggung", "MB": 0.6, "MD": 0.2},
-    "G12": {"label": "Konsumsi obat steroid (glukokortikoid)", "MB": 0.7, "MD": 0.1},
-    "G13": {"label": "Mengidap hipertiroidisme", "MB": 0.6, "MD": 0.2}
+  "info": {
+    "title": "Sistem Pakar Diagnosa Osteoporosis",
+    "description": "Basis pengetahuan untuk menentukan jenis osteoporosis menggunakan metode Forward Chaining dan Certainty Factor.",
+    "author": "Mahasiswa Mekatronika - Proyek Implementasi Ulang Sistem Pakar",
+    "version": "2.0"
   },
+
+  "symptoms": {
+    "G01": { "label": "Usia di atas 40 tahun", "MB": 0.7, "MD": 0.2 },
+    "G02": { "label": "Kelebihan berat badan (obesitas)", "MB": 0.6, "MD": 0.3 },
+    "G03": { "label": "Pernah mengalami patah tulang sebelumnya", "MB": 0.6, "MD": 0.1 },
+    "G04": { "label": "Memiliki riwayat keluarga osteoporosis", "MB": 1.0, "MD": 0.1 },
+    "G05": { "label": "Telah mengalami menopause", "MB": 0.6, "MD": 0.3 },
+    "G06": { "label": "Mengalami nyeri punggung secara terus-menerus", "MB": 0.7, "MD": 0.2 },
+    "G07": { "label": "Sering merokok", "MB": 0.8, "MD": 0.1 },
+    "G08": { "label": "Mengalami nyeri sendi", "MB": 0.6, "MD": 0.2 },
+    "G09": { "label": "Kadar hormon testosteron rendah", "MB": 0.7, "MD": 0.2 },
+    "G10": { "label": "Sering mengonsumsi minuman beralkohol", "MB": 0.8, "MD": 0.1 },
+    "G11": { "label": "Terjadi keretakan pada tulang punggung", "MB": 0.6, "MD": 0.2 },
+    "G12": { "label": "Sering mengonsumsi obat steroid (glukokortikoid)", "MB": 0.7, "MD": 0.1 },
+    "G13": { "label": "Mengidap hipertiroidisme", "MB": 0.6, "MD": 0.2 }
+  },
+
   "rules": [
     {
       "id": "R1",
-      "if": ["G01","G02","G03","G05","G08","G11","G13"],
+      "if": ["G01", "G02", "G03", "G05", "G08", "G11", "G13"],
       "then": "P01",
-      "then_label": "Bukan Osteoporosis",
-      "cf": 0.95
+      "then_label": "Tidak Terindikasi Osteoporosis",
+      "cf": 0.95,
+      "note": "Pasien memiliki beberapa faktor risiko ringan tanpa gejala kerusakan tulang yang signifikan."
     },
     {
       "id": "R2",
-      "if": ["G01","G02","G03","G07","G10","G12","G13"],
+      "if": ["G01", "G02", "G03", "G07", "G10", "G12", "G13"],
       "then": "P02",
       "then_label": "Osteoporosis Primer",
-      "cf": 0.9
+      "cf": 0.9,
+      "note": "Kombinasi usia lanjut, kebiasaan tidak sehat, dan penggunaan obat tertentu mengarah pada osteoporosis primer."
     },
     {
       "id": "R3",
-      "if": ["G04","G05","G06","G08","G09","G11"],
+      "if": ["G04", "G05", "G06", "G08", "G09", "G11"],
       "then": "P03",
       "then_label": "Osteoporosis Sekunder",
-      "cf": 0.9
+      "cf": 0.9,
+      "note": "Faktor hormonal dan genetik yang dominan menunjukkan kemungkinan osteoporosis sekunder."
     },
     {
       "id": "R4",
       "if": ["P02"],
-      "then": "Complication_A",
-      "then_label": "Komplikasi: Fraktur Tinggi",
-      "cf": 0.8
+      "then": "C01",
+      "then_label": "Komplikasi: Risiko Fraktur Tinggi",
+      "cf": 0.8,
+      "note": "Penderita osteoporosis primer berisiko tinggi mengalami patah tulang serius."
     },
     {
       "id": "R5",
-      "if": ["G05","G11"],
+      "if": ["G05", "G11"],
       "then": "P02",
-      "then_label": "Osteoporosis Primer (aturan paralel, cf rendah)",
-      "cf": 0.5
+      "then_label": "Osteoporosis Primer ",
+      "cf": 0.5,
+      "note": "Gejala utama menopouse dan keretakan tulang ringan, indikasi awal osteoporosis primer."
     },
     {
       "id": "R6",
-      "if": ["G01","G05","G11"],
+      "if": ["G01", "G05", "G11"],
       "then": "P02",
-      "then_label": "Osteoporosis Primer (aturan paralel, cf sedang)",
-      "cf": 0.75
+      "then_label": "Osteoporosis Primer ",
+      "cf": 0.75,
+      "note": "Gabungan usia lanjut, menopause, dan kerusakan tulang punggung menunjukkan risiko sedang osteoporosis primer."
     }
-  ]
+  ],
+
+  "diagnosis": {
+    "P01": {
+      "label": "Tidak Terindikasi Osteoporosis",
+      "description": "Tidak ditemukan indikasi signifikan terhadap osteoporosis. Disarankan tetap menjaga pola makan dan gaya hidup sehat."
+    },
+    "P02": {
+      "label": "Osteoporosis Primer",
+      "description": "Terjadi akibat penuaan alami, penurunan hormon, dan kebiasaan buruk seperti merokok atau alkohol. Perlu pemeriksaan lebih lanjut dan terapi nutrisi."
+    },
+    "P03": {
+      "label": "Osteoporosis Sekunder",
+      "description": "Disebabkan oleh kondisi medis lain seperti gangguan hormon atau efek obat tertentu. Disarankan konsultasi dengan dokter spesialis endokrinologi."
+    },
+    "C01": {
+      "label": "Komplikasi: Risiko Fraktur Tinggi",
+      "description": "Penderita berpotensi mengalami patah tulang berat. Diperlukan penanganan dini untuk mencegah kerusakan tulang lebih lanjut."
+    }
+  }
 }
+
