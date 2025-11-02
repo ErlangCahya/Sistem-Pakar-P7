@@ -1,6 +1,3 @@
-
-# inference_engine/main.py
-
 import json
 import os
 
